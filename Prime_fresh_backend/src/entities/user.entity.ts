@@ -1,4 +1,4 @@
-//in this crypto used that is two algorithm encryption and decryption is possible with that
+//in this crypto used that is two way algorithm encryption and decryption is possible with that
 // import {
 //   Entity,
 //   Column,
@@ -156,12 +156,13 @@ import bcrypt from "bcryptjs";
 import Model from "./model.entity";
 import { Address } from "./address.entity";
 import { Role } from "./role.entity";
+import { Status } from "../utils/status.enum";
 
 // Define the Status enums
-export enum Status {
-  PENDING = "pending",
-  APPROVED = "approved",
-}
+// export enum Status {
+//   PENDING = "pending",
+//   APPROVED = "approved",
+// }
 
 export enum EmployeeStatus {
   ACTIVE = "active",

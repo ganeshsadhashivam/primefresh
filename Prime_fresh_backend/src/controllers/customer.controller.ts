@@ -14,8 +14,12 @@ import {
 import { CustomerService } from "../services/customer.service";
 import { TYPES } from "../types";
 import AppError from "../utils/appError";
-import { NextFunction,  Request, Response } from "express";
-import { CreateCustomerInput, createCustomerSchema, customerSchema, UpdateCustomerInput } from "../schemas/customer.schema";
+import { NextFunction, Request, Response } from "express";
+import {
+  CreateCustomerInput,
+  customerSchema,
+  UpdateCustomerInput,
+} from "../schemas/customer.schema";
 import { validate } from "../middleware/validate";
 import { userSchema } from "../schemas/user.schema";
 
@@ -64,43 +68,41 @@ export class CustomerController {
     }
   }
 
-  
-@httpPost("/")
-public async create(
-  @requestBody() customerData: CreateCustomerInput,
-  @response() res: Response,
-  @next() next: NextFunction
-) {
-  try {
-    // Parse the customer data using Zod schema
-    const parsedData = createCustomerSchema.parse(customerData);
-
-    // Create the customer using the parsed data
-    const customer = await this.customerService.create(parsedData);
-
-    // Send a successful response
-    res.status(201).json({
-      status: "success",
-      message: "Customer created successfully",
-      //data: customer,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
-
-
-  @httpPatch("/:id")
-  public async update(
-    @requestParam("id") id: string,
-    @request() req: Request<{}, {},UpdateCustomerInput>,
+  @httpPost("/")
+  public async create(
+    @requestBody() customerData: CreateCustomerInput,
     @response() res: Response,
     @next() next: NextFunction
   ) {
     try {
-      const customerData=req.body;
+      // Parse the customer data using Zod schema
+      //const parsedData = createCustomerSchema.parse(customerData);
+
+      // Create the customer using the parsed data
+      const customer = await this.customerService.create(customerData);
+
+      // Send a successful response
+      res.status(201).json({
+        status: "success",
+        message: "Customer created successfully",
+        //data: customer,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  @httpPatch("/:id")
+  public async update(
+    @requestParam("id") id: string,
+    @request() req: Request<{}, {}, UpdateCustomerInput>,
+    @response() res: Response,
+    @next() next: NextFunction
+  ) {
+    try {
+      const customerData = req.body;
       const parsedData = customerSchema.parse(customerData);
-      console.log("customerdata:  ",customerData)
+      console.log("customerdata:  ", customerData);
       const customer = await this.customerService.update(id, parsedData);
       if (!customer) {
         return next(new AppError(404, "Customer not found or update failed"));
@@ -116,24 +118,20 @@ public async create(
     }
   }
 
-  
   @httpDelete("/:id")
-public async delete(
-  @requestParam("id") id: string,
-  @response() res: Response,
-  @next() next: NextFunction
-) {
-  try {
-    
-
-    await this.customerService.delete(id);
-    res.status(200).json({
-      status: "success",
-      message: "Customer deleted successfully",
-    });
-  } catch (err) {
-    next(err);
+  public async delete(
+    @requestParam("id") id: string,
+    @response() res: Response,
+    @next() next: NextFunction
+  ) {
+    try {
+      await this.customerService.delete(id);
+      res.status(200).json({
+        status: "success",
+        message: "Customer deleted successfully",
+      });
+    } catch (err) {
+      next(err);
+    }
   }
-}
-
 }

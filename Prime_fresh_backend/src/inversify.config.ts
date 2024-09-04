@@ -62,6 +62,15 @@ import { ProductRepository } from "./repositories/product.repository";
 import { LocationsService } from "./services/locations.service";
 import { LocationsRepository } from "./repositories/locations.repository";
 import { LocationsController } from "./controllers/locations.controller";
+import { SupplierService } from "./services/supplier.service";
+import { SupplierRepository } from "./repositories/supplier.repository";
+import { SupplierController } from "./controllers/supplier.controller";
+import { CropService } from "./services/crop.service";
+import { CropRepository } from "./repositories/crop.repository";
+import { CropController } from "./controllers/crop.controller";
+// import { SupplierService } from "./services/supplier.service";
+// import { SupplierRepository } from "./repositories/supplier.repository";
+// import { SupplierController } from "./controllers/supplier.controller";
 
 const container = new Container();
 
@@ -199,6 +208,21 @@ container
   .to(FarmerController)
   .inSingletonScope();
 
+//----------------------Crop-----------------------------
+
+container
+  .bind<CropService>(TYPES.CropService)
+  .to(CropService)
+  .inSingletonScope();
+container
+  .bind<CropRepository>(TYPES.CropRepository)
+  .to(CropRepository)
+  .inSingletonScope();
+container
+  .bind<CropController>(TYPES.CropController)
+  .to(CropController)
+  .inSingletonScope();
+
 //------------------------UOMconversionMatrix-----------------------------
 container
   .bind<UOMConversionMatrixService>(TYPES.UOMConversionMatrixService)
@@ -302,5 +326,15 @@ container
   .bind<LocationsController>(TYPES.LocationsController)
   .to(LocationsController)
   .inSingletonScope();
+
+//------------------Supplier------------------------------------------
+
+container.bind<SupplierService>(TYPES.SupplierService).to(SupplierService);
+container
+  .bind<SupplierRepository>(TYPES.SupplierRepository)
+  .to(SupplierRepository);
+container
+  .bind<SupplierController>(TYPES.SupplierController)
+  .to(SupplierController);
 
 export { container };

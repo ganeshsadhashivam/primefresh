@@ -21,6 +21,7 @@ import AppError from "../utils/appError";
 import { UserService } from "../services/user.service";
 import { TYPES } from "../types";
 import { EmployeeStatus } from "../entities/user.entity";
+import { Status } from "../utils/status.enum";
 
 @controller("/employee")
 export class UserController {
@@ -159,8 +160,9 @@ export class UserController {
   ) {
     try {
       // Fetch user by ID
+      console.log(id);
       const user = await this.userService.findUserById(id);
-
+      console.log(user);
       if (!user) {
         return next(new AppError(404, "User not found"));
       }
@@ -170,7 +172,12 @@ export class UserController {
       // user.employeeStatus = EmployeeStatus.ACTIVE;
 
       // Set employeeStatus to ACTIVE
-      user.employeeStatus = EmployeeStatus.ACTIVE;
+      if (
+        user.employeeStatus === EmployeeStatus.INACTIVE &&
+        user.status === Status.APPROVED
+      ) {
+        user.employeeStatus = EmployeeStatus.ACTIVE;
+      } else user.employeeStatus = EmployeeStatus.INACTIVE;
 
       // await this.userService.upadateEmployeeState(id);
 

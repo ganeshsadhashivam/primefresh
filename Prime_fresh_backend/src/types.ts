@@ -1,6 +1,3 @@
-
-
-
 // src/types.ts
 const TYPES = {
   //--------User-----------
@@ -10,9 +7,9 @@ const TYPES = {
   AuthController: Symbol.for("AuthController"),
 
   //-----------------------role -----------------------
-  RoleService:Symbol.for("RoleService"),
-  RoleRepository:Symbol.for("RoleRepository"),
-  RoleController:Symbol.for("RoleController"),
+  RoleService: Symbol.for("RoleService"),
+  RoleRepository: Symbol.for("RoleRepository"),
+  RoleController: Symbol.for("RoleController"),
   //--------VendorCategory----------
   VendorCategoryService: Symbol.for("VendorCategoryService"),
   VendorCategoryRepository: Symbol.for("VendorCategoryRepository"),
@@ -21,8 +18,8 @@ const TYPES = {
   // DataSource
   DataSource: Symbol.for("DataSource"),
   // address
-  AddressRepository:Symbol.for("AddressRepository"),
-  AddressService:Symbol.for("AddressService"),
+  AddressRepository: Symbol.for("AddressRepository"),
+  AddressService: Symbol.for("AddressService"),
 
   //-------VendorSubcategory--------------------------------------
   VendorSubcategoryService: Symbol.for("VendorSubcategoryService"),
@@ -50,6 +47,11 @@ const TYPES = {
   FarmerService: Symbol.for("FarmerService"),
   FarmerRepository: Symbol.for("FarmerRepository"),
   FarmerController: Symbol.for("FarmerController"),
+
+  //--------------Crop-------------------
+  CropService: Symbol.for("CropService"),
+  CropRepository: Symbol.for("CropRepository"),
+  CropController: Symbol.for("CropController"),
   //---------------UOM------------------------
   UOMService: Symbol.for("UOMService"),
   UOMRepository: Symbol.for("UOMRepository"),
@@ -71,20 +73,28 @@ const TYPES = {
   ProductService: Symbol.for("ProductService"),
   ProductRepository: Symbol.for("ProductRepository"),
   ProductController: Symbol.for("ProductController"),
-//---------------------------location---------
-LocationsService: Symbol.for("LocationsService"),
-LocationsRepository: Symbol.for("LocationsRepository"),
-LocationsController: Symbol.for("LocationsController"),
-  
+  //---------------------------location---------
+  LocationsService: Symbol.for("LocationsService"),
+  LocationsRepository: Symbol.for("LocationsRepository"),
+  LocationsController: Symbol.for("LocationsController"),
 
   //-----------------------driver----------------
-  DriversService:Symbol.for("DriversService"),
-  DriverRepository:Symbol.for("DriverRepository"),
-  DriverController:Symbol.for("DriverController"),
+  DriversService: Symbol.for("DriversService"),
+  DriverRepository: Symbol.for("DriverRepository"),
+  DriverController: Symbol.for("DriverController"),
   //-------------------------productClassification--------------------
   ProductClassificationService: Symbol.for("ProductClassificationService"),
-  ProductClassificationRepository:Symbol.for(" ProductClassificationRepository"),
-  ProductClassificationController:  Symbol.for("ProductClassificationController")
+  ProductClassificationRepository: Symbol.for(
+    " ProductClassificationRepository"
+  ),
+  ProductClassificationController: Symbol.for(
+    "ProductClassificationController"
+  ),
+
+  //--------------------------Supplier------------------------------------
+  SupplierService: Symbol.for("SupplierService"),
+  SupplierRepository: Symbol.for("SupplierRepository"),
+  SupplierController: Symbol.for("SupplierController"),
 };
 
 export { TYPES };

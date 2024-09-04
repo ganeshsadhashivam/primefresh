@@ -46,76 +46,97 @@ const params = {
   }),
 };
 
-
 // Schema for validating user ID parameter
 export const UserIdSchema = object({
   ...params,
 });
 
-// Schema for updating user information
-export const UpdateUserSchema = object({
-  ...params,
-  body: object({
-    firstName: string({
-      required_error: "First name is required",
-    }).optional(),
-    lastName: string({
-      required_error: "Last name is required",
-    }).optional(),
-    username: string({
-      required_error: "Username is required",
-    }).optional(),
-    phoneNumber: string({
-      required_error: "Phone number is required",
-    }).optional(),
-    email: string({
-      required_error: "Email address is required",
+// // Schema for updating user information
+// export const UpdateUserSchema = object({
+//   ...params,
+//   body: object({
+//     firstName: string({
+//       required_error: "First name is required",
+//     }).optional(),
+//     lastName: string({
+//       required_error: "Last name is required",
+//     }).optional(),
+//     username: string({
+//       required_error: "Username is required",
+//     }).optional(),
+//     phoneNumber: string({
+//       required_error: "Phone number is required",
+//     }).optional(),
+//     email: string({
+//       required_error: "Email address is required",
+//     })
+//       .email("Invalid email address")
+//       .optional(),
+//     password: string({
+//       required_error: "Password is required",
+//     })
+//       .min(8, "Password must be more than 8 characters")
+//       .max(32, "Password must be less than 32 characters")
+//       .optional(),
+//     address: array(addressSchema).optional(),
+//     joiningDate: z
+//       .string()
+//       .transform((value) => new Date(value))
+//       .optional(),
+//       roleId: string().uuid().optional(),
+//   }),
+// });
+
+// Define the Status enum
+const StatusEnum = z.enum(["pending", "approved", "active", "inactive"]);
+
+// Define the EmployeeStatus enum
+const EmployeeStatusEnum = z.enum(["active", "inactive"]);
+export const userSchema = z.object({
+  firstName: z.string().optional(),
+  middleName: z.string().optional(),
+  lastName: z.string().optional(),
+  username: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  email: z.string().email("Invalid email address").optional(),
+  companyEmail: z.string().email("Invalid company email address").optional(),
+  designation: z.string().optional(),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .optional(),
+  roleId: z.string().uuid("Invalid Role ID format").optional(),
+  employeeCode: z.string().optional(),
+  joiningDate: z
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Invalid date format",
     })
-      .email("Invalid email address")
-      .optional(),
-    password: string({
-      required_error: "Password is required",
+    .optional(),
+  relocationDate: z
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), {
+      message: "Invalid date format",
     })
-      .min(8, "Password must be more than 8 characters")
-      .max(32, "Password must be less than 32 characters")
-      .optional(),
-    address: array(addressSchema).optional(),
-    joiningDate: z
-      .string()
-      .transform((value) => new Date(value))
-      .optional(),
-      roleId: string().uuid().optional(),
-  }),
+    .optional(),
+  relocationPlace: z.string().optional(),
+
+  street: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  postalCode: z.string().optional(),
+  country: z.string().optional(),
+
+  status: StatusEnum.optional(),
+  employeeStatus: EmployeeStatusEnum.optional(),
+  recommendedBy: z.string().optional(),
+  cugNo: z.string().optional(),
+  reportingAuthorityAdministrative: z.string().optional(),
+  reportingAuthorityFunctional: z.string().optional(),
 });
-
-
-
-export const userSchema =   // Ensure params is correctly defined and compatible with zod schema
-object({
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
-    username: z.string().optional(),
-    phoneNumber: z.string().optional(),
-    email: z.string().email("Invalid email address").optional(),
-    employeeId: z.string().optional(),
-    joiningDate: z.string().refine(date => !isNaN(Date.parse(date)), {
-      message: "Invalid date format",
-    }).optional(),
-    relocationDate:z.string().refine(date => !isNaN(Date.parse(date)), {
-      message: "Invalid date format",
-    }).optional(), 
-    relocationPlace:z.string().optional(),
-    street: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    postalCode: z.string().optional(),
-    country: z.string().optional(),
-    roleId: z.string().uuid("Invalid Role ID format").optional(),
-  })
 
 export type UpdateUserInput = TypeOf<typeof userSchema>;
 export type CreateUserInput = TypeOf<typeof createUserSchema>["body"];
 
 export type GetUserInput = TypeOf<typeof UserIdSchema>["params"];
-export type UpdateUserInputa = TypeOf<typeof UpdateUserSchema>;
-
+//export type UpdateUserInputa = TypeOf<typeof UpdateUserSchema>;

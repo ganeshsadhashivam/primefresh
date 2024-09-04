@@ -1,97 +1,53 @@
-import { injectable, inject } from "inversify";
-import { FarmerRepository } from "../repositories/farmer.repository";
-import { DataSource } from "typeorm";
+import { inject, injectable } from "inversify";
 import { Farmer } from "../entities/farmer.entity";
+import { FarmerRepository } from "../repositories/farmer.repository";
 import { TYPES } from "../types";
-import { AddressService } from "./address.service";
-import { UpdateFarmerInput } from "../schemas/farmer.schema";
-import AppError from "../utils/appError";
+import { DataSource } from "typeorm";
 
 @injectable()
 export class FarmerService {
   private farmerRepository: FarmerRepository;
-  private addressService: AddressService;
 
-  constructor(@inject(TYPES.DataSource) private dataSource: DataSource,
-  @inject(TYPES.AddressService) addressService: AddressService)
-   {
+  constructor(@inject(TYPES.DataSource) private dataSource: DataSource) {
     this.farmerRepository = this.dataSource.getRepository(
       Farmer
     ) as FarmerRepository;
-    this.addressService = addressService;
   }
 
-  public async getAll(): Promise<Farmer[]> {
-    return this.farmerRepository.find({relations: [ 'address']});
+  public async getAllFarmers(): Promise<Farmer[]> {
+    return this.farmerRepository.find({ relations: ["crops"] });
   }
 
-  public async getById(id: string): Promise<Farmer | null> {
+  public async getFarmerById(id: string): Promise<Farmer | null> {
     return this.farmerRepository.findOne({
       where: { id },
-      relations: ['address'], // Load the related Address entity
-  });;
+      relations: ["crops"], // Corrected to use an array
+    });
   }
 
-  public async create(farmerData: Partial<Farmer>): Promise<Farmer> {
+  public async createFarmer(farmerData: Partial<Farmer>): Promise<Farmer> {
     const farmer = this.farmerRepository.create(farmerData);
     return this.farmerRepository.save(farmer);
   }
 
-  public async updateFarmer(id: string, farmersData:UpdateFarmerInput): Promise<Farmer| null> {
-    const { street, city, state, postalCode, country, ...rest } = farmersData;
-  
-    const farmers = await this.farmerRepository.findOne({
-      where: { id },
-      relations: ['address']
-    });
-    if (!farmers) {
-      throw new AppError(404, "Driver not found");
+  public async updateFarmer(
+    id: string,
+    farmerData: Partial<Farmer>
+  ): Promise<Farmer | null> {
+    const farmer = await this.farmerRepository.findOne({ where: { id } });
+    if (farmer) {
+      Object.assign(farmer, farmerData);
+      return this.farmerRepository.save(farmer);
     }
-  // Handle address update or creation
-  if (street || city || state || postalCode || country) {
-    let address = farmers.address;
-  
-    if (!address) {
-      // Create a new address if it does not exist
-      address = await this.addressService.create({
-        street,
-        city,
-        state,
-        postalCode,
-        country,
-      });
-    } else {
-      // Update existing address with the provided fields
-      const updatedAddressData = {
-        street: street ?? address.street,
-        city: city ?? address.city,
-        state: state ?? address.state,
-        postalCode: postalCode ?? address.postalCode,
-        country: country ?? address.country,
-      };
-  
-      address = await this.addressService.update(address.id, updatedAddressData);
-      if (!address) {
-        throw new AppError(400, "Address update failed");
-      }
-    }
-  
-    farmers.address = address;
+    return null;
   }
-  
-    
-    
-  
-  
-  Object.assign(farmers, rest);
-  
-  return await this.farmerRepository.save(farmers);
-  }
-  
-  
 
-  public async delete(id: string): Promise<boolean> {
-    const result = await this.farmerRepository.delete(id);
-    return result.affected !== 0;
+  public async deleteFarmer(id: string): Promise<boolean> {
+    const farmer = await this.farmerRepository.findOne({ where: { id } });
+    if (farmer) {
+      await this.farmerRepository.remove(farmer);
+      return true;
+    }
+    return false;
   }
 }
