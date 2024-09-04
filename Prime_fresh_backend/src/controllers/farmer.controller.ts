@@ -51,19 +51,43 @@ export class FarmerController {
     return res.status(201).json(farmer);
   }
 
+  // @httpPatch("/:id", validate(FarmerSchema))
+  // public async updateFarmer(
+  //   @request() req: Request,
+  //   @response() res: Response
+  // ): Promise<Response> {
+  //   const updatedFarmer = await this.farmerService.updateFarmer(
+  //     req.params.id,
+  //     req.body
+  //   );
+  //   if (updatedFarmer) {
+  //     return res.json(updatedFarmer);
+  //   }
+  //   return res.status(404).json({ message: "Farmer not found" });
+  // }
+
   @httpPatch("/:id", validate(FarmerSchema))
   public async updateFarmer(
     @request() req: Request,
     @response() res: Response
   ): Promise<Response> {
-    const updatedFarmer = await this.farmerService.updateFarmer(
-      req.params.id,
-      req.body
-    );
-    if (updatedFarmer) {
-      return res.json(updatedFarmer);
+    try {
+      const farmerId = req.params.id;
+      const updateData = req.body;
+
+      // Call the service method to update farmer and crops
+      const updatedFarmer = await this.farmerService.updateFarmer(
+        farmerId,
+        updateData
+      );
+
+      if (updatedFarmer) {
+        return res.json(updatedFarmer);
+      }
+      return res.status(404).json({ message: "Farmer not found" });
+    } catch (error) {
+      return res.status(400).json({ error: error });
     }
-    return res.status(404).json({ message: "Farmer not found" });
   }
 
   @httpDelete("/:id")
